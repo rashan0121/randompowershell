@@ -1,0 +1,15 @@
+Function Get-FileName($InitialDirectory)
+{
+    [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
+
+  $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+  $OpenFileDialog.initialDirectory = $initialDirectory
+  $OpenFileDialog.filter = "CSV (*.csv) | *.csv"
+  $OpenFileDialog.ShowDialog() | Out-Null
+  $OpenFileDialog.FileName
+}
+#get the file name of the csv you selected 
+$inpfile = Get-FileName
+#import the selected csv file
+$computers=import-csv $inpfile| ForEach-Object { 
+get-ADcomputer -identity $_.DistinguishedName} 
